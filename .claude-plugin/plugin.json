@@ -2,136 +2,21 @@
   "name": "edmunds-claude-code",
   "version": "1.0.0",
   "description": "Edmund's personal Claude Code setup with 14 productivity commands and 11 specialized AI agents for modern web development",
-  "author": "Edmund",
+  "author":{"name": "Edmund"},
   "license": "MIT",
-  "commands": [
-    {
-      "name": "new-task",
-      "path": ".claude/commands/new-task.md",
-      "description": "Analyze code for performance issues and suggest optimizations"
-    },
-    {
-      "name": "code-explain",
-      "path": ".claude/commands/misc/code-explain.md",
-      "description": "Generate detailed code explanations"
-    },
-    {
-      "name": "code-optimize",
-      "path": ".claude/commands/misc/code-optimize.md",
-      "description": "Optimize code for performance"
-    },
-    {
-      "name": "code-cleanup",
-      "path": ".claude/commands/misc/code-cleanup.md",
-      "description": "Clean up and refactor code"
-    },
-    {
-      "name": "feature-plan",
-      "path": ".claude/commands/misc/feature-plan.md",
-      "description": "Plan new feature implementation"
-    },
-    {
-      "name": "lint",
-      "path": ".claude/commands/misc/lint.md",
-      "description": "Run linting and fix issues"
-    },
-    {
-      "name": "docs-generate",
-      "path": ".claude/commands/misc/docs-generate.md",
-      "description": "Generate documentation"
-    },
-    {
-      "name": "api-new",
-      "path": ".claude/commands/api/api-new.md",
-      "description": "Create new API endpoint"
-    },
-    {
-      "name": "api-test",
-      "path": ".claude/commands/api/api-test.md",
-      "description": "Test API endpoints"
-    },
-    {
-      "name": "api-protect",
-      "path": ".claude/commands/api/api-protect.md",
-      "description": "Add API protection and validation"
-    },
-    {
-      "name": "component-new",
-      "path": ".claude/commands/ui/component-new.md",
-      "description": "Create new React component"
-    },
-    {
-      "name": "page-new",
-      "path": ".claude/commands/ui/page-new.md",
-      "description": "Create new Next.js page"
-    },
-    {
-      "name": "types-gen",
-      "path": ".claude/commands/supabase/types-gen.md",
-      "description": "Generate Supabase TypeScript types"
-    },
-    {
-      "name": "edge-function-new",
-      "path": ".claude/commands/supabase/edge-function-new.md",
-      "description": "Create new Supabase Edge Function"
-    }
-  ],
+  "commands": "./.claude/commands/",
   "agents": [
-    {
-      "name": "tech-stack-researcher",
-      "path": ".claude/agents/tech-stack-researcher.md",
-      "description": "Research and recommend technology choices for feature development"
-    },
-    {
-      "name": "backend-architect",
-      "path": ".claude/agents/backend-architect.md",
-      "description": "Design reliable backend systems with focus on data integrity, security, and fault tolerance"
-    },
-    {
-      "name": "deep-research-agent",
-      "path": ".claude/agents/deep-research-agent.md",
-      "description": "Specialist for comprehensive research with adaptive strategies and intelligent exploration"
-    },
-    {
-      "name": "frontend-architect",
-      "path": ".claude/agents/frontend-architect.md",
-      "description": "Create accessible, performant user interfaces with focus on user experience and modern frameworks"
-    },
-    {
-      "name": "learning-guide",
-      "path": ".claude/agents/learning-guide.md",
-      "description": "Teach programming concepts and explain code with focus on understanding through progressive learning"
-    },
-    {
-      "name": "performance-engineer",
-      "path": ".claude/agents/performance-engineer.md",
-      "description": "Optimize system performance through measurement-driven analysis and bottleneck elimination"
-    },
-    {
-      "name": "refactoring-expert",
-      "path": ".claude/agents/refactoring-expert.md",
-      "description": "Improve code quality and reduce technical debt through systematic refactoring and clean code principles"
-    },
-    {
-      "name": "requirements-analyst",
-      "path": ".claude/agents/requirements-analyst.md",
-      "description": "Transform ambiguous project ideas into concrete specifications through systematic requirements discovery"
-    },
-    {
-      "name": "security-engineer",
-      "path": ".claude/agents/security-engineer.md",
-      "description": "Identify security vulnerabilities and ensure compliance with security standards and best practices"
-    },
-    {
-      "name": "system-architect",
-      "path": ".claude/agents/system-architect.md",
-      "description": "Design scalable system architecture with focus on maintainability and long-term technical decisions"
-    },
-    {
-      "name": "technical-writer",
-      "path": ".claude/agents/technical-writer.md",
-      "description": "Create clear, comprehensive technical documentation tailored to specific audiences with focus on usability"
-    }
+    "./.claude/agents/backend-architect.md",
+    "./.claude/agents/deep-research-agent.md",
+    "./.claude/agents/frontend-architect.md",
+    "./.claude/agents/learning-guide.md",
+    "./.claude/agents/performance-engineer.md",
+    "./.claude/agents/refactoring-expert.md",
+    "./.claude/agents/requirements-analyst.md",
+    "./.claude/agents/security-engineer.md",
+    "./.claude/agents/system-architect.md",
+    "./.claude/agents/tech-stack-researcher.md",
+    "./.claude/agents/technical-writer.md"
   ],
   "mcpServers": {
     "context7": {
@@ -149,15 +34,6 @@
       "args": ["-y", "@supabase/mcp-server-supabase"],
       "description": "Supabase database operations and management"
     }
-  },
-  "tags": [
-    "productivity",
-    "nextjs",
-    "supabase",
-    "typescript",
-    "react",
-    "api",
-    "development",
-    "mcp"
-  ]
+  }
+
 }
