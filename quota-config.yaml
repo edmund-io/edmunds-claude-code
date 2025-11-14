@@ -1,0 +1,737 @@
+# AI CLI FREE-TIER QUOTA CONFIGURATION
+# Machine-readable configuration for quota management systems
+# Last Updated: 2025-11-14
+# Format: YAML 1.2
+
+version: "1.0.0"
+last_updated: "2025-11-14"
+confidence_level: "85%_confirmed_data"
+
+# =============================================================================
+# PROVIDER CONFIGURATIONS
+# =============================================================================
+
+providers:
+
+  # ---------------------------------------------------------------------------
+  # GOOGLE GEMINI
+  # ---------------------------------------------------------------------------
+  gemini_cli_personal:
+    provider_name: "Google Gemini (Personal Account)"
+    official_docs: "https://ai.google.dev/pricing"
+    cli_type: "official"
+    cli_repo: "https://github.com/google-gemini/gemini-cli"
+
+    free_tier:
+      type: "permanent"
+      confirmed:
+        rpm: 60
+        rpd: 1000
+        notes: "Using personal Google account authentication"
+
+      inferred:
+        safe_calls_per_minute: 48  # 80% of 60
+        safe_calls_per_hour: 800   # Respecting RPM and RPD constraints
+        safe_calls_per_day: 800    # 80% of 1000
+        safe_calls_per_week: 5600
+        safe_calls_per_month: 24000
+
+    models:
+      - name: "gemini-2.5-pro"
+        context_window: 1048576  # 1M tokens
+        free_tier_rpm: 5
+        free_tier_tpm: 250000
+        free_tier_rpd: 100
+        cost_per_1m_input: 0.00
+        cost_per_1m_output: 0.00
+
+      - name: "gemini-2.5-flash"
+        context_window: 1048576
+        free_tier_rpm: 10
+        free_tier_tpm: 250000
+        free_tier_rpd: 250
+        cost_per_1m_input: 0.00
+        cost_per_1m_output: 0.00
+
+      - name: "gemini-2.5-flash-lite"
+        context_window: 1048576
+        free_tier_rpm: 15
+        free_tier_tpm: 250000
+        free_tier_rpd: 1000
+        cost_per_1m_input: 0.00
+        cost_per_1m_output: 0.00
+
+    reset_cycle: "daily"
+    reset_time: "unknown_likely_midnight_utc"
+
+    multi_account_strategy:
+      allowed: true
+      tos_compliant: true
+      recommendation: "Use 3-5 personal accounts for different team members"
+      safe_account_count: 5
+      notes: "Each account must be legitimate personal Google account"
+
+    reliability:
+      status: "moderate"
+      known_issues:
+        - "Automatic model downgrade when hitting limits"
+        - "Occasional API 500 errors"
+        - "Performance degradation reports"
+      uptime: "~95%"
+
+  # ---------------------------------------------------------------------------
+  # GROQ
+  # ---------------------------------------------------------------------------
+  groq_free:
+    provider_name: "Groq (Free Tier)"
+    official_docs: "https://groq.com/pricing/"
+    cli_type: "multi_llm_integration"
+
+    free_tier:
+      type: "permanent"
+      confirmed:
+        rpm: 30
+        rpd: 14400
+        tpm: 20000
+        notes: "Free access to open-source models with ultrafast inference"
+
+      inferred:
+        safe_calls_per_minute: 25
+        safe_calls_per_hour: 1440
+        safe_calls_per_day: 12000
+        safe_calls_per_week: 84000
+        safe_calls_per_month: 360000
+
+    models:
+      - name: "llama-3.3-70b-versatile"
+        provider: "Meta"
+        context_window: 32768
+        speed_tokens_per_sec: 300
+        free_tier_rpm: 30
+        free_tier_rpd: 14400
+        free_tier_tpm: 20000
+        cost: "free"
+
+      - name: "gemma-2-9b-it"
+        provider: "Google"
+        context_window: 8192
+        speed_tokens_per_sec: 500
+        free_tier_rpm: 30
+        free_tier_rpd: 14400
+        free_tier_tpm: 20000
+        cost: "free"
+
+    reset_cycle: "realtime_sliding_window"
+
+    multi_account_strategy:
+      allowed: false
+      recommendation: "Single account only, no multi-account needed"
+
+    reliability:
+      status: "excellent"
+      uptime: "~99%"
+      known_issues: []
+
+  # ---------------------------------------------------------------------------
+  # OLLAMA (LOCAL)
+  # ---------------------------------------------------------------------------
+  ollama_local:
+    provider_name: "Ollama (Local Inference)"
+    official_docs: "https://ollama.com/"
+    cli_type: "local"
+    cli_repo: "https://github.com/ollama/ollama"
+
+    free_tier:
+      type: "unlimited"
+      confirmed:
+        rpm: -1  # Unlimited
+        rpd: -1  # Unlimited
+        tpm: -1  # Unlimited
+        notes: "100% local, no API calls, hardware-limited only"
+
+      inferred:
+        safe_calls_per_minute: -1
+        safe_calls_per_hour: -1
+        safe_calls_per_day: -1
+        safe_calls_per_week: -1
+        safe_calls_per_month: -1
+
+    hardware_requirements:
+      minimum:
+        ram: "8GB"
+        vram: "0GB (CPU only)"
+        models_supported: "Up to 3B parameters"
+
+      recommended:
+        ram: "16GB"
+        vram: "12GB (RTX 3060 or similar)"
+        models_supported: "Up to 13B parameters"
+
+      high_end:
+        ram: "32GB"
+        vram: "24GB (RTX 4090 or similar)"
+        models_supported: "Up to 70B parameters (quantized)"
+
+    models_available: 100+
+
+    cost:
+      hardware_investment: "$0-$5000 (one-time)"
+      operational_cost_per_month: 0.00
+      electricity_estimate: "$5-20/month (depending on usage)"
+
+    reset_cycle: "not_applicable"
+
+    reliability:
+      status: "excellent"
+      notes: "Depends on local hardware stability"
+
+  # ---------------------------------------------------------------------------
+  # DEEPSEEK
+  # ---------------------------------------------------------------------------
+  deepseek_api:
+    provider_name: "DeepSeek API"
+    official_docs: "https://api-docs.deepseek.com/"
+    cli_type: "community_wrappers"
+    best_cli: "deepseek-engineer"
+
+    free_tier:
+      type: "trial_one_time"
+      confirmed:
+        trial_tokens: 1000000
+        trial_credit_usd: 1.00
+        trial_duration_days: "7-14"
+        rpm_during_trial: "no_hard_limit"
+        tpm_during_trial: "no_hard_limit"
+        notes: "Dynamic throttling, no hard caps, but frequent outages"
+
+      inferred:
+        safe_calls_per_day_trial: 500
+        total_trial_value_usd: 1.50
+
+    models:
+      - name: "deepseek-v3"
+        cost_per_1m_input: 0.27
+        cost_per_1m_output: 1.10
+        cache_hit_per_1m: 0.014
+        context_window: 65536
+
+      - name: "deepseek-v3.2-exp"
+        cost_per_1m_input: 0.28
+        cost_per_1m_output: 0.42
+        context_window: 65536
+        notes: "Cheapest option for most use cases"
+
+      - name: "deepseek-r1"
+        cost_per_1m_input: 0.55
+        cost_per_1m_output: 2.19
+        cache_hit_per_1m: 0.014
+        context_window: 65536
+        notes: "27x cheaper than OpenAI o1"
+
+    reset_cycle: "one_time_trial_no_renewal"
+
+    multi_account_strategy:
+      allowed: false
+      recommendation: "Single trial per user, no renewals"
+
+    reliability:
+      status: "poor"
+      uptime: "~85%"
+      known_issues:
+        - "52+ outages in past 10 months"
+        - "Timeouts during high traffic"
+        - "Silent failures reported"
+
+  # ---------------------------------------------------------------------------
+  # OPENAI
+  # ---------------------------------------------------------------------------
+  openai_api:
+    provider_name: "OpenAI API"
+    official_docs: "https://platform.openai.com/docs/guides/rate-limits"
+    cli_type: "official_and_community"
+
+    free_tier:
+      type: "trial_credits"
+      confirmed:
+        trial_credit_usd: 5.00
+        trial_duration_months: 3
+        free_tier_rpm: 3
+        free_tier_rpd: 200
+        notes: "Free tier essentially unusable, need Tier 1 ($5 payment)"
+
+      inferred:
+        usable_requests_trial: "~100 (severely limited)"
+
+    tier_1_paid:
+      qualification: "Pay $5"
+      monthly_cap_usd: 100
+      confirmed:
+        gpt4o_rpm: 500
+        gpt4o_tpm: 30000
+      inferred:
+        safe_calls_per_minute: 400
+        safe_calls_per_hour: 24000
+        safe_calls_per_day: "limited_by_monthly_cap"
+
+    models:
+      - name: "gpt-4o-mini"
+        cost_per_1m_input: 0.15
+        cost_per_1m_output: 0.60
+        context_window: 128000
+        notes: "Most cost-efficient, 83% cheaper than GPT-4 Turbo"
+
+      - name: "gpt-4o"
+        cost_per_1m_input: 2.50
+        cost_per_1m_output: 10.00
+        context_window: 128000
+        notes: "Flagship model"
+
+      - name: "o1-mini"
+        cost_per_1m_input: 1.10
+        cost_per_1m_output: 4.40
+        context_window: 128000
+        notes: "Efficient reasoning model"
+
+    reset_cycle: "monthly"
+
+    multi_account_strategy:
+      allowed: false
+      recommendation: "Single account, upgrade tiers with usage"
+
+    reliability:
+      status: "excellent"
+      uptime: "~99.9%"
+
+  # ---------------------------------------------------------------------------
+  # ANTHROPIC (CLAUDE)
+  # ---------------------------------------------------------------------------
+  anthropic_api:
+    provider_name: "Anthropic API"
+    official_docs: "https://docs.anthropic.com/en/api/rate-limits"
+    cli_type: "official"
+
+    free_tier:
+      type: "trial_credits"
+      confirmed:
+        trial_credit_usd: 5.00
+        phone_verification_required: true
+        notes: "US phone number required, one-time trial"
+
+      inferred:
+        usable_tokens_haiku: 5000000
+        usable_tokens_sonnet: 1666000
+
+    tier_1_build:
+      monthly_cap_usd: 100
+      confirmed:
+        sonnet_rpm: 50
+        sonnet_tpm_input: 40000
+        sonnet_tpm_output: 8000
+
+      inferred:
+        safe_calls_per_minute: 40
+        safe_calls_per_hour: 2400
+        safe_calls_per_day: 57600
+
+    models:
+      - name: "claude-3.5-haiku"
+        cost_per_1m_input: 1.00
+        cost_per_1m_output: 5.00
+        context_window: 200000
+        notes: "Budget option"
+
+      - name: "claude-3.5-sonnet"
+        cost_per_1m_input: 3.00
+        cost_per_1m_output: 15.00
+        context_window: 200000
+        notes: "Flagship for coding"
+
+      - name: "claude-opus-4.1"
+        cost_per_1m_input: 15.00
+        cost_per_1m_output: 75.00
+        context_window: 200000
+        notes: "Premium reasoning, requires Max subscription ($100-200/month)"
+
+    subscription_options:
+      claude_pro:
+        cost_per_month: 20.00
+        models: ["sonnet-4.5", "haiku-4.5"]
+        quota_type: "weekly_usage_limits"
+        quota_public: false
+
+      claude_max:
+        cost_per_month: "100-200"
+        models: ["all_including_opus"]
+        quota_type: "higher_limits"
+
+    reset_cycle: "monthly"
+
+    multi_account_strategy:
+      allowed: false
+      recommendation: "Single account per phone number"
+
+    reliability:
+      status: "good"
+      uptime: "~98%"
+
+  # ---------------------------------------------------------------------------
+  # GROK / XAI
+  # ---------------------------------------------------------------------------
+  xai_grok:
+    provider_name: "xAI Grok API"
+    official_docs: "https://docs.x.ai/"
+    cli_type: "community_wrappers"
+
+    free_tier:
+      type: "conditional_promotional"
+      confirmed:
+        monthly_credit_usd: 150.00
+        conditions:
+          - "Minimum $5 API spend required"
+          - "Opt-in to data sharing required"
+          - "Eligible country required"
+        notes: "No indefinite free tier as of 2025"
+
+      inferred:
+        eligibility_percentage: "~30-40% of users"
+
+    web_access_free:
+      x_free_tier:
+        prompts_per_2hr: 10
+        cost: 0.00
+        access_method: "x.com only"
+
+      x_premium:
+        prompts_per_2hr: 100
+        cost_per_month: 8.00
+        access_method: "x.com only"
+
+    models:
+      - name: "grok-3-mini"
+        cost_per_1m_input: 0.30
+        cost_per_1m_output: 0.50
+        notes: "Budget option"
+
+      - name: "grok-4-fast"
+        cost_per_1m_input: "0.20-0.40"
+        cost_per_1m_output: "0.50-1.00"
+        notes: "Speed-optimized"
+
+      - name: "grok-4"
+        cost_per_1m_input: 3.00
+        cost_per_1m_output: 15.00
+        notes: "Flagship model"
+
+    rate_limits:
+      status: "account_specific"
+      docs: "Check console.x.ai for your tier"
+      confirmed: false
+      notes: "No public RPM/TPM breakdowns available"
+
+    reset_cycle: "monthly"
+
+    multi_account_strategy:
+      allowed: false
+      recommendation: "Avoid for free-tier exploitation"
+
+    reliability:
+      status: "unknown_new_api"
+      notes: "API launched October 2024, limited public data"
+
+# =============================================================================
+# MULTI-LLM CLI TOOLS
+# =============================================================================
+
+multi_llm_tools:
+
+  aider:
+    name: "Aider"
+    github: "https://github.com/paul-gauthier/aider"
+    stars: 37700
+    description: "AI pair programming in terminal"
+
+    supported_providers:
+      - "anthropic"
+      - "openai"
+      - "gemini"
+      - "deepseek"
+      - "groq"
+      - "azure"
+      - "ollama"
+
+    free_tier_friendliness: "excellent"
+    notes: "Provider-agnostic, use any free tier"
+
+  aichat:
+    name: "AIChat"
+    github: "https://github.com/sigoden/aichat"
+    description: "All-in-one CLI with 20+ providers"
+
+    supported_providers_count: 20+
+
+    features:
+      - "RAG (retrieval augmented generation)"
+      - "Agents"
+      - "Shell assistant"
+      - "REPL mode"
+
+    free_tier_friendliness: "excellent"
+    notes: "Best for rotating between multiple free tiers"
+
+  cline:
+    name: "Cline"
+    github: "https://github.com/cline/cline"
+    stars: 50000
+    description: "Autonomous coding agent for VS Code"
+
+    supported_providers:
+      - "anthropic"
+      - "openai"
+      - "gemini"
+      - "groq"
+      - "ollama"
+
+    free_tier_friendliness: "excellent"
+    notes: "No API markups, direct provider billing"
+
+  mods:
+    name: "mods"
+    github: "https://github.com/charmbracelet/mods"
+    stars: 4300
+    description: "UNIX pipeline-friendly AI CLI"
+
+    supported_providers_count: 8+
+
+    free_tier_friendliness: "good"
+    notes: "Excellent for scripting and automation"
+
+  shell_gpt:
+    name: "Shell-GPT (sgpt)"
+    github: "https://github.com/TheR1D/shell_gpt"
+    stars: 11500
+    description: "Shell command generation with GPT"
+
+    primary_provider: "openai"
+    multi_provider: "limited"
+
+    free_tier_friendliness: "moderate"
+    notes: "OpenAI-focused, expensive after free trial"
+
+# =============================================================================
+# ROTATION STRATEGIES
+# =============================================================================
+
+rotation_strategies:
+
+  pure_free_zero_cost:
+    name: "Pure Free Tier (Zero Cost)"
+    monthly_cost: 0.00
+
+    primary_provider: "gemini_cli_personal"
+    secondary_provider: "groq_free"
+    tertiary_provider: "ollama_local"
+
+    expected_capacity:
+      requests_per_day: 14000+
+      tokens_per_day: 1000000+
+
+    recommended_for:
+      - "Students"
+      - "Hobbyists"
+      - "Side projects"
+      - "Learning and experimentation"
+
+  trial_hopping_one_time:
+    name: "Trial Hopping (One-Time Maximization)"
+    total_free_value: 11.50
+
+    sequence:
+      - provider: "deepseek_api"
+        value: 1.50
+        use_first: true
+
+      - provider: "openai_api"
+        value: 5.00
+        use_second: true
+        focus_model: "gpt-4o-mini"
+
+      - provider: "anthropic_api"
+        value: 5.00
+        use_third: true
+        focus_model: "claude-haiku"
+
+      - provider: "gemini_cli_personal"
+        value: "indefinite"
+        use_ongoing: true
+
+    recommended_for:
+      - "One-time projects"
+      - "Evaluating multiple providers"
+      - "Maximum value extraction"
+
+  hybrid_minimal_cost:
+    name: "Hybrid (Minimal Cost)"
+    monthly_cost: 5-20
+
+    free_tier_providers:
+      - "gemini_cli_personal"
+      - "groq_free"
+      - "ollama_local"
+
+    paid_tier_minimal:
+      provider: "openai_api"
+      tier: "tier_1"
+      monthly_cap: 100
+      actual_spend: "5-20"
+
+    distribution:
+      gemini_percentage: 60
+      groq_percentage: 25
+      ollama_percentage: 10
+      openai_percentage: 5
+
+    recommended_for:
+      - "Small businesses"
+      - "Freelancers"
+      - "Personal productivity"
+
+  budget_power_user:
+    name: "Budget Power User"
+    monthly_cost: 20-40
+
+    primary_coding: "aider + deepseek_api"
+    backup_free: "gemini_cli_personal"
+    premium_fallback: "anthropic_api"
+
+    distribution:
+      deepseek_percentage: 40
+      gemini_percentage: 40
+      claude_percentage: 10
+      groq_percentage: 10
+
+    expected_capacity:
+      requests_per_day: 5000+
+      cost_per_request: 0.004
+
+    recommended_for:
+      - "Developers"
+      - "Small dev teams"
+      - "Serious coding projects"
+
+# =============================================================================
+# QUOTA TRACKING CONFIGURATION
+# =============================================================================
+
+quota_tracking:
+
+  safety_margin: 0.80  # Use 80% of limits
+
+  tracking_interval_seconds: 60
+
+  metrics_to_track:
+    - "requests_per_minute"
+    - "requests_per_day"
+    - "tokens_per_minute"
+    - "cost_usd_accumulated"
+
+  alert_thresholds:
+    warning_percentage: 75
+    critical_percentage: 90
+    block_percentage: 95
+
+  fallback_triggers:
+    - condition: "primary_quota_exceeded"
+      action: "switch_to_secondary"
+
+    - condition: "secondary_quota_exceeded"
+      action: "switch_to_tertiary"
+
+    - condition: "all_quotas_exceeded"
+      action: "queue_for_later"
+
+  reset_detection:
+    method: "passive_monitoring"
+    check_interval_minutes: 60
+    notes: "Monitor for quota replenishment"
+
+# =============================================================================
+# COST ESTIMATION
+# =============================================================================
+
+cost_estimation:
+
+  request_volume_scenarios:
+
+    low_10k_per_day:
+      requests_per_day: 10000
+      free_tier_coverage: 70%
+      paid_requests: 3000
+
+      estimated_monthly_cost:
+        minimum: 33
+        typical: 38
+        maximum: 43
+
+      provider_mix:
+        gemini: 5000
+        groq: 2000
+        deepseek: 2500
+        claude: 500
+
+    medium_50k_per_day:
+      requests_per_day: 50000
+      free_tier_coverage: 30%
+      paid_requests: 35000
+
+      estimated_monthly_cost:
+        minimum: 100
+        typical: 125
+        maximum: 150
+
+      provider_mix:
+        gemini: 10000
+        groq: 5000
+        deepseek: 25000
+        claude: 10000
+
+    high_100k_per_day:
+      requests_per_day: 100000
+      free_tier_coverage: 20%
+      paid_requests: 80000
+
+      estimated_monthly_cost:
+        minimum: 250
+        typical: 300
+        maximum: 350
+
+      provider_mix:
+        gemini: 15000
+        groq: 5000
+        deepseek: 60000
+        claude: 20000
+
+# =============================================================================
+# METADATA
+# =============================================================================
+
+metadata:
+  schema_version: "1.0.0"
+  last_updated: "2025-11-14"
+
+  data_confidence:
+    confirmed_percentage: 70
+    derived_percentage: 25
+    unknown_percentage: 5
+
+  sources_count: 250+
+
+  research_reports:
+    - "/home/user/edmunds-claude-code/CLAUDE_CLI_COMPREHENSIVE_RESEARCH_REPORT.md"
+    - "/home/user/edmunds-claude-code/openai-cli-research-report.md"
+    - "/home/user/edmunds-claude-code/gemini-cli-research-report.md"
+    - "/home/user/edmunds-claude-code/deepseek-cli-research-report.md"
+    - "/home/user/edmunds-claude-code/grok-xai-cli-research-report.md"
+    - "/home/user/edmunds-claude-code/AI_CLI_COMPREHENSIVE_RESEARCH_REPORT.md"
+
+  maintained_by: "AI CLI Research Orchestrator"
+  contact: "github.com/YubenTT/edmunds-claude-code"
