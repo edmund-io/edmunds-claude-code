@@ -1,0 +1,69 @@
+# AI CLI Orchestrator - Docker Compose Configuration
+#
+# Usage:
+#   1. Create .env file with your API keys
+#   2. docker-compose up -d
+#   3. docker-compose exec ai ai "Your prompt"
+#
+
+version: '3.8'
+
+services:
+  ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ai-cli-orchestrator:latest
+    container_name: ai-cli-orchestrator
+    env_file:
+      - .env
+    volumes:
+      # Mount current directory for file operations
+      - ./workspace:/workspace
+      # Persist logs
+      - ai-logs:/root/.ai-cli-orchestrator/logs
+      # Optional: Mount custom config
+      - ./quota-config.yaml:/root/.ai-cli-orchestrator/config.yaml:ro
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    command: tail -f /dev/null  # Keep container running
+
+  # Optional: Add Ollama for local inference
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ai-ollama
+    volumes:
+      - ollama-models:/root/.ollama
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+    # Uncomment for GPU support (requires nvidia-docker)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  # Optional: Web UI for monitoring (future enhancement)
+  # dashboard:
+  #   image: ai-cli-dashboard:latest
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - ai
+  #   environment:
+  #     - API_URL=http://ai:8080
+
+volumes:
+  ai-logs:
+    driver: local
+  ollama-models:
+    driver: local
+
+networks:
+  default:
+    name: ai-cli-network

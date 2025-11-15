@@ -1,0 +1,69 @@
+# AI CLI Orchestrator - Docker ignore file
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Documentation (include only essential docs)
+*.md
+!README.md
+!QUICKSTART.md
+
+# Research reports (too large for container)
+*_RESEARCH_REPORT.md
+*-research-report.md
+
+# Keep only essential config files
+!quota-config.yaml
+!.env.example
