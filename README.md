@@ -6,7 +6,7 @@ My personal Claude Code configuration for productive web development. This plugi
 
 ```bash
 # Step 1: Add the marketplace
-/plugin marketplace add edmund-io/edmunds-claude-code
+/plugin marketplace add WAOmaster/edmunds-claude-code
 
 # Step 2: Install the plugin
 /plugin install edmunds-claude-code
@@ -65,7 +65,7 @@ My personal Claude Code configuration for productive web development. This plugi
 
 ```bash
 # Add marketplace
-/plugin marketplace add edmund-io/edmunds-claude-code
+/plugin marketplace add WAOmaster/edmunds-claude-code
 
 # Install plugin
 /plugin install edmunds-claude-code
@@ -74,7 +74,7 @@ My personal Claude Code configuration for productive web development. This plugi
 ### From Local Clone (for development)
 
 ```bash
-git clone https://github.com/edmund-io/edmunds-claude-code.git
+git clone https://github.com/WAOmaster/edmunds-claude-code.git
 cd edmunds-claude-code
 
 # Add as local marketplace
