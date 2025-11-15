@@ -1,0 +1,253 @@
+# AI CLI Orchestrator V2 - Docker Compose
+# Complete system with browser automation and OAuth support
+#
+# Usage:
+#   cp .env.v2.example .env
+#   docker-compose -f docker-compose.v2.yml up -d
+#
+
+version: '3.8'
+
+services:
+  # Frontend - React Webapp
+  webapp:
+    build:
+      context: ./webapp
+      dockerfile: Dockerfile
+    image: ai-orchestrator-webapp:latest
+    container_name: ai-webapp
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_SUPABASE_URL=${SUPABASE_URL}
+      - VITE_SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - VITE_API_URL=http://localhost:3001
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # API Gateway (if not using Supabase Edge Functions)
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    image: ai-orchestrator-api:latest
+    container_name: ai-api
+    ports:
+      - "3001:3001"
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      - REDIS_URL=redis://redis:6379
+      - NODE_ENV=production
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # Redis - Job Queue & Cache
+  redis:
+    image: redis:7-alpine
+    container_name: ai-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - ai-network
+
+  # Browser Worker Pool (3 instances)
+  browser-worker-1:
+    build:
+      context: ./browser-worker
+      dockerfile: Dockerfile
+    image: ai-orchestrator-browser-worker:latest
+    container_name: ai-browser-worker-1
+    environment:
+      - WORKER_ID=1
+      - WORKER_NAME=browser-worker-1
+      - REDIS_URL=redis://redis:6379
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      - CONCURRENCY=2
+      - HEADLESS=true
+      - SCREENSHOT_ON_ERROR=true
+      - VIDEO_RECORDING=false
+    volumes:
+      - browser-sessions-1:/app/sessions
+      - browser-screenshots:/app/screenshots
+      - browser-videos:/app/videos
+    shm_size: '2gb'  # Shared memory for Chrome
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - ai-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          memory: 512M
+
+  browser-worker-2:
+    build:
+      context: ./browser-worker
+      dockerfile: Dockerfile
+    image: ai-orchestrator-browser-worker:latest
+    container_name: ai-browser-worker-2
+    environment:
+      - WORKER_ID=2
+      - WORKER_NAME=browser-worker-2
+      - REDIS_URL=redis://redis:6379
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      - CONCURRENCY=2
+      - HEADLESS=true
+      - SCREENSHOT_ON_ERROR=true
+      - VIDEO_RECORDING=false
+    volumes:
+      - browser-sessions-2:/app/sessions
+      - browser-screenshots:/app/screenshots
+      - browser-videos:/app/videos
+    shm_size: '2gb'
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - ai-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          memory: 512M
+
+  browser-worker-3:
+    build:
+      context: ./browser-worker
+      dockerfile: Dockerfile
+    image: ai-orchestrator-browser-worker:latest
+    container_name: ai-browser-worker-3
+    environment:
+      - WORKER_ID=3
+      - WORKER_NAME=browser-worker-3
+      - REDIS_URL=redis://redis:6379
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      - CONCURRENCY=2
+      - HEADLESS=true
+      - SCREENSHOT_ON_ERROR=true
+      - VIDEO_RECORDING=false
+    volumes:
+      - browser-sessions-3:/app/sessions
+      - browser-screenshots:/app/screenshots
+      - browser-videos:/app/videos
+    shm_size: '2gb'
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - ai-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          memory: 512M
+
+  # Quota Tracker Service
+  quota-tracker:
+    build:
+      context: ./quota-tracker
+      dockerfile: Dockerfile
+    image: ai-orchestrator-quota-tracker:latest
+    container_name: ai-quota-tracker
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      - REDIS_URL=redis://redis:6379
+      - CHECK_INTERVAL=60000  # 60 seconds
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # Optional: Redis Commander (UI for debugging)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: ai-redis-commander
+    ports:
+      - "8081:8081"
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    depends_on:
+      - redis
+    restart: unless-stopped
+    profiles:
+      - debug
+    networks:
+      - ai-network
+
+  # Optional: Ollama (local AI for fallback)
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ai-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    restart: unless-stopped
+    profiles:
+      - local-ai
+    networks:
+      - ai-network
+    # Uncomment for GPU support
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+volumes:
+  redis-data:
+    driver: local
+  browser-sessions-1:
+    driver: local
+  browser-sessions-2:
+    driver: local
+  browser-sessions-3:
+    driver: local
+  browser-screenshots:
+    driver: local
+  browser-videos:
+    driver: local
+  ollama-models:
+    driver: local
+
+networks:
+  ai-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+# Health checks and monitoring
+# Use: docker-compose ps to see health status
+# Use: docker-compose logs -f browser-worker-1 to see logs
