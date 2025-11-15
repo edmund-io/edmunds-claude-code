@@ -2,75 +2,91 @@
   "name": "edmunds-claude-code",
   "version": "1.0.0",
   "description": "Edmund's personal Claude Code setup with 14 productivity commands and 11 specialized AI agents for modern web development",
-  "author": "Edmund",
+  "author": {
+    "name": "Edmund"
+  },
   "license": "MIT",
   "commands": [
     {
+      "id": "new-task",
       "name": "new-task",
       "path": ".claude/commands/new-task.md",
       "description": "Analyze code for performance issues and suggest optimizations"
     },
     {
+      "id": "code-explain",
       "name": "code-explain",
       "path": ".claude/commands/misc/code-explain.md",
       "description": "Generate detailed code explanations"
     },
     {
+      "id": "code-optimize",
       "name": "code-optimize",
       "path": ".claude/commands/misc/code-optimize.md",
       "description": "Optimize code for performance"
     },
     {
+      "id": "code-cleanup",
       "name": "code-cleanup",
       "path": ".claude/commands/misc/code-cleanup.md",
       "description": "Clean up and refactor code"
     },
     {
+      "id": "feature-plan",
       "name": "feature-plan",
       "path": ".claude/commands/misc/feature-plan.md",
       "description": "Plan new feature implementation"
     },
     {
+      "id": "lint",
       "name": "lint",
       "path": ".claude/commands/misc/lint.md",
       "description": "Run linting and fix issues"
     },
     {
+      "id": "docs-generate",
       "name": "docs-generate",
       "path": ".claude/commands/misc/docs-generate.md",
       "description": "Generate documentation"
     },
     {
+      "id": "api-new",
       "name": "api-new",
       "path": ".claude/commands/api/api-new.md",
       "description": "Create new API endpoint"
     },
     {
+      "id": "api-test",
       "name": "api-test",
       "path": ".claude/commands/api/api-test.md",
       "description": "Test API endpoints"
     },
     {
+      "id": "api-protect",
       "name": "api-protect",
       "path": ".claude/commands/api/api-protect.md",
       "description": "Add API protection and validation"
     },
     {
+      "id": "component-new",
       "name": "component-new",
       "path": ".claude/commands/ui/component-new.md",
       "description": "Create new React component"
     },
     {
+      "id": "page-new",
       "name": "page-new",
       "path": ".claude/commands/ui/page-new.md",
       "description": "Create new Next.js page"
     },
     {
+      "id": "types-gen",
       "name": "types-gen",
       "path": ".claude/commands/supabase/types-gen.md",
       "description": "Generate Supabase TypeScript types"
     },
     {
+      "id": "edge-function-new",
       "name": "edge-function-new",
       "path": ".claude/commands/supabase/edge-function-new.md",
       "description": "Create new Supabase Edge Function"
@@ -78,56 +94,67 @@
   ],
   "agents": [
     {
+      "id": "tech-stack-researcher",
       "name": "tech-stack-researcher",
       "path": ".claude/agents/tech-stack-researcher.md",
       "description": "Research and recommend technology choices for feature development"
     },
     {
+      "id": "backend-architect",
       "name": "backend-architect",
       "path": ".claude/agents/backend-architect.md",
       "description": "Design reliable backend systems with focus on data integrity, security, and fault tolerance"
     },
     {
+      "id": "deep-research-agent",
       "name": "deep-research-agent",
       "path": ".claude/agents/deep-research-agent.md",
       "description": "Specialist for comprehensive research with adaptive strategies and intelligent exploration"
     },
     {
+      "id": "frontend-architect",
       "name": "frontend-architect",
       "path": ".claude/agents/frontend-architect.md",
       "description": "Create accessible, performant user interfaces with focus on user experience and modern frameworks"
     },
     {
+      "id": "learning-guide",
       "name": "learning-guide",
       "path": ".claude/agents/learning-guide.md",
       "description": "Teach programming concepts and explain code with focus on understanding through progressive learning"
     },
     {
+      "id": "performance-engineer",
       "name": "performance-engineer",
       "path": ".claude/agents/performance-engineer.md",
       "description": "Optimize system performance through measurement-driven analysis and bottleneck elimination"
     },
     {
+      "id": "refactoring-expert",
       "name": "refactoring-expert",
       "path": ".claude/agents/refactoring-expert.md",
       "description": "Improve code quality and reduce technical debt through systematic refactoring and clean code principles"
     },
     {
+      "id": "requirements-analyst",
       "name": "requirements-analyst",
       "path": ".claude/agents/requirements-analyst.md",
       "description": "Transform ambiguous project ideas into concrete specifications through systematic requirements discovery"
     },
     {
+      "id": "security-engineer",
       "name": "security-engineer",
       "path": ".claude/agents/security-engineer.md",
       "description": "Identify security vulnerabilities and ensure compliance with security standards and best practices"
     },
     {
+      "id": "system-architect",
       "name": "system-architect",
       "path": ".claude/agents/system-architect.md",
       "description": "Design scalable system architecture with focus on maintainability and long-term technical decisions"
     },
     {
+      "id": "technical-writer",
       "name": "technical-writer",
       "path": ".claude/agents/technical-writer.md",
       "description": "Create clear, comprehensive technical documentation tailored to specific audiences with focus on usability"
